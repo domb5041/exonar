@@ -1,36 +1,51 @@
 import React, { Component } from 'react';
-import Layout from './components/Layout/Layout'
-import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder';
-import PhotoGrid from './components/PhotoGrid'
 import axios from 'axios';
+import MapContainer from './components/MapContainer';
+import './App.scss';
+import Aux from './components/Aux';
 
 
 class App extends Component {
   state = {
-    photos: []
+    data: null
   }
 
   componentDidMount() {
-    const access = '09aa8e1ca0bc53258faabd91d192b1aeae5fd4230ef2f43cd354b802c29810dd';
-    const secret = '4e5b76aa4375f4281195d21f685d3e1b501f37c73e126b00144eb2c6f88adde0';
-    axios.get(`https://api.unsplash.com/photos/?client_id=${access}`)
+    this.apiCall();
+  }
+
+  apiCall = () => {
+    axios.get('http://api.open-notify.org/iss-now.json')
       .then(response => {
-        const posts = response.data.slice(0, 50);
-        this.setState({ photos: response.data });
-        console.log(response);
-      })
+        this.setState({ data: response.data });
+      });
+    setTimeout(this.apiCall, 100);
   }
 
   render() {
+    let lng, lat;
+    if (this.state.data) {
+      lng = this.state.data.iss_position.longitude
+      lat = this.state.data.iss_position.latitude
+    }
+
+
 
     return (
-      <div>
-        <Layout>
-          <BurgerBuilder />
-        </Layout>
-
-        <PhotoGrid photos={this.state.photos} />
-      </div>
+      <Aux>
+        <MapContainer className='map' lat={lat} lng={lng} />
+        <div className='overlay'>
+          <h1>International Space Station <span>live tracking</span></h1>
+          <div className='crosshair'>
+            <div></div>
+            <div></div>
+          </div>
+          <div className='coordinates'>
+            <p>lat: {lat}</p>
+            <p>lng: {lng}</p>
+          </div>
+        </div>
+      </Aux>
     )
   };
 }
