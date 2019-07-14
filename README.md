@@ -6,3 +6,4 @@ Access the app [here](http://exonar.herokuapp.com/)
 
 Uses 2 APIs: [ISS Location Now](http://open-notify.org/Open-Notify-API/ISS-Location-Now/) and [Google Maps JavaScript API V3](https://developers.google.com/maps/documentation/javascript/reference/)
 
+### if its all black you're in the middle of the ocean!
